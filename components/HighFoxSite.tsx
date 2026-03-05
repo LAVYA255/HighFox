@@ -126,9 +126,13 @@ function RippleSVG() {
 
 // ─── ORB ──────────────────────────────────────────────────────────────────────
 function OrbSphere() {
+    const { isMobile } = useBreakpoint()
     const b1=useRef<HTMLDivElement>(null),b2=useRef<HTMLDivElement>(null),g1=useRef<HTMLDivElement>(null),g2=useRef<HTMLDivElement>(null)
+    const size = isMobile ? 180 : 320
+    const marginL = -size/2
+    const marginT = isMobile ? -120 : -210
     return (
-        <motion.div style={{position:"absolute",zIndex:10,top:"50%",left:"50%",width:320,height:320,marginLeft:-160,marginTop:-210,willChange:"transform"}}
+        <motion.div style={{position:"absolute",zIndex:10,top:"50%",left:"50%",width:size,height:size,marginLeft:marginL,marginTop:marginT,willChange:"transform"}}
             animate={{y:[0,-18,0]}} transition={{duration:2.2,repeat:Infinity,ease:"easeInOut"}}
             onUpdate={(l)=>{const t=(-(l.y as number))/18;if(b1.current)b1.current.style.top=`${46+t*7}%`;if(b2.current)b2.current.style.top=`${58+t*6}%`;if(g1.current)g1.current.style.top=`${53+t*6}%`;if(g2.current)g2.current.style.top=`${64+t*5}%`}}>
             <div style={{width:"100%",height:"100%",borderRadius:"50%",position:"relative",overflow:"hidden",background:"#fafafa",boxShadow:"0 0 0 1px rgba(180,178,175,.20),0 12px 40px rgba(0,0,0,.07),0 30px 80px rgba(0,0,0,.05),inset 0 -20px 50px rgba(0,0,0,.05),inset 1px 2px 8px rgba(255,255,255,.80)",filter:"blur(.4px)"}}>
@@ -556,7 +560,7 @@ export default function HighfoxSite() {
         <div style={{width:"100%",fontFamily:"'Inter', 'DM Sans', sans-serif",background:"#f8f7f5",overflowX:"hidden"}}>
             <Navbar/>
             <section style={{position:"relative",width:"100%",height:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",overflow:"hidden",background:"radial-gradient(ellipse 85% 65% at 50% 46%,#f2f0ee 0%,#f8f7f5 55%,#ffffff 100%)"}}>
-                {!isMobile && <RippleSVG/>}{!isMobile && <OrbSphere/>}<HeroContent/>
+                <RippleSVG/><OrbSphere/><HeroContent/>
             </section>
             <CredibilityStrip/>
             <FounderQuote/>

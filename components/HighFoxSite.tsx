@@ -453,19 +453,25 @@ function ProductsBuilt() {
                     <h2 style={{fontSize:isMobile?"clamp(28px,7vw,44px)":"clamp(36px,5vw,58px)",fontFamily:"'Inter', sans-serif",fontWeight:700,letterSpacing:"-0.03em",color:"#111",marginTop:20,marginBottom:12}}>Products We Have<br/>Shipped</h2>
                     <p style={{fontSize:isMobile?14:16,color:"#777",maxWidth:520,margin:"12px auto 0",lineHeight:1.65}}>Not case studies. These are products our team helped build from the inside.</p>
                 </div></FadeIn>
-                <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:isMobile?14:24}}>
+                <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:isMobile?14:24,alignItems:"stretch"}}>
                     {prods.map((p,i)=>(
-                        <FadeIn key={i} delay={i*.15}>
-                            <Card style={{padding:0,overflow:"hidden"}}>
-                                <div style={{padding:isMobile?"20px 20px 16px":"32px 32px 20px"}}>
-                                    <div style={{display:"inline-block",fontSize:11,fontWeight:600,letterSpacing:"0.1em",color:"#888",background:"rgba(0,0,0,.05)",borderRadius:6,padding:"4px 10px",marginBottom:16,textTransform:"uppercase" as const}}>{p.tag}</div>
-                                    <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:12}}>
-                                        <Image src={p.logo} alt={p.name} width={36} height={36} style={{objectFit:"contain",borderRadius:8}}/>
-                                        <h3 style={{fontSize:isMobile?20:26,fontFamily:"'Inter', sans-serif",fontWeight:600,letterSpacing:"-0.02em",color:"#111",margin:0}}>{p.name}</h3>
+                        <FadeIn key={i} delay={i*.15} style={{height:"100%"}}>
+                            <Card style={{padding:0,overflow:"hidden",display:"flex",flexDirection:"column"}}>
+                                {/* Body — grows to fill card height */}
+                                <div style={{padding:isMobile?"20px 20px 20px":"32px 32px 24px",flex:1,display:"flex",flexDirection:"column"}}>
+                                    <div style={{display:"inline-block",fontSize:11,fontWeight:600,letterSpacing:"0.1em",color:"#888",background:"rgba(0,0,0,.05)",borderRadius:6,padding:"4px 10px",marginBottom:20,textTransform:"uppercase" as const,alignSelf:"flex-start"}}>{p.tag}</div>
+                                    {/* Logo + name — fixed height row */}
+                                    <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:16}}>
+                                        <div style={{width:40,height:40,borderRadius:10,background:"#f4f4f4",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,overflow:"hidden"}}>
+                                            <Image src={p.logo} alt={p.name} width={36} height={36} style={{objectFit:"contain",width:36,height:36}}/>
+                                        </div>
+                                        <h3 style={{fontSize:isMobile?19:24,fontFamily:"'Inter', sans-serif",fontWeight:600,letterSpacing:"-0.02em",color:"#111",margin:0}}>{p.name}</h3>
                                     </div>
-                                    <p style={{fontSize:14,color:"#666",lineHeight:1.65,margin:0}}>{p.desc}</p>
+                                    {/* Description — flex-grow so both cards push stats to bottom */}
+                                    <p style={{fontSize:14,color:"#666",lineHeight:1.7,margin:0,flex:1}}>{p.desc}</p>
                                 </div>
-                                <div style={{borderTop:"1px solid rgba(0,0,0,.07)",display:"grid",gridTemplateColumns:"1fr 1fr"}}>
+                                {/* Stats — always pinned to bottom */}
+                                <div style={{borderTop:"1px solid rgba(0,0,0,.07)",display:"grid",gridTemplateColumns:"1fr 1fr",flexShrink:0}}>
                                     <div style={{padding:isMobile?"14px 18px":"18px 28px",borderRight:"1px solid rgba(0,0,0,.07)"}}>
                                         <div style={{fontSize:isMobile?20:24,fontWeight:700,color:"#111",fontFamily:"'Inter', sans-serif",letterSpacing:"-0.03em"}}>{p.m1}</div>
                                         <div style={{fontSize:11,color:"#999",marginTop:3,lineHeight:1.4}}>{p.m1l}</div>

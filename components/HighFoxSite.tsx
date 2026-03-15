@@ -1,6 +1,6 @@
 "use client"
-// HighfoxSite.tsx — Complete website
-// React + Framer Motion + Recharts. Zero emojis — all inline SVG icons.
+// HighfoxSite.tsx - Complete website
+// React + Framer Motion + Recharts. Zero emojis - all inline SVG icons.
 
 import { motion, useAnimationFrame, useInView, useReducedMotion } from "framer-motion"
 import { useEffect, useRef, useState } from "react"
@@ -238,7 +238,7 @@ function HeroContent() {
                 We don't consult.<br /><em>We build fintech</em><br />products that scale.
             </motion.h1>
             <motion.p variants={it} style={{fontSize:isMobile?14:16,color:"#606060",maxWidth:500,lineHeight:1.6,margin:0}}>
-                Built by operators behind India's largest fintech products — UPI apps handling 500M+ monthly transactions, credit cards at national scale.
+                Built by operators behind India's largest fintech products - UPI apps handling 500M+ monthly transactions, credit cards at national scale.
             </motion.p>
             <motion.div variants={it} style={{display:"flex",flexDirection:isMobile?"column":"row",gap:10,width:isMobile?"100%":"auto"}}>
                 <motion.button style={{display:"inline-flex",alignItems:"center",justifyContent:"center",gap:8,background:"#111",color:"#fff",border:"none",borderRadius:12,padding:"13px 26px",fontSize:14,fontWeight:500,fontFamily:"inherit",cursor:"pointer",boxShadow:"0 4px 18px rgba(0,0,0,.22)",minHeight:44}} whileHover={{opacity:.86,y:-2}} whileTap={{scale:.97}}>
@@ -359,7 +359,7 @@ function Expertise() {
     const dom=[
         {I:IC.UPI, title:"UPI", desc:"Designing and scaling high-throughput payment experiences handling hundreds of millions of monthly transactions.", dark:true},
         {I:IC.Card, title:"Credit Cards", desc:"Building acquisition, underwriting, onboarding, and engagement systems for mass-scale issuance.", dark:false},
-        {I:IC.Coin, title:"Loans", desc:"End-to-end lending journeys — from risk orchestration to disbursal and lifecycle management.", dark:false},
+        {I:IC.Coin, title:"Loans", desc:"End-to-end lending journeys - from risk orchestration to disbursal and lifecycle management.", dark:false},
         {I:IC.Gift, title:"Rewards & Engagement", desc:"Creating habit-forming reward ecosystems that drive retention and transaction growth.", dark:false},
     ]
     return (
@@ -446,7 +446,7 @@ function HowWeWork() {
     const steps=[
         {n:"01",t:"We pick one product",d:"A deliberate decision to work on only your product. No parallel engagements. Ever.",I:IC.Coin},
         {n:"02",t:"We embed deeply",d:"We join your team as operators, not advisors. In the trenches, not in boardrooms.",I:IC.Users},
-        {n:"03",t:"We build alongside you",d:"Hands-on product leadership — from strategy to execution to shipping.",I:IC.Zap},
+        {n:"03",t:"We build alongside you",d:"Hands-on product leadership - from strategy to execution to shipping.",I:IC.Zap},
         {n:"04",t:"We stay until it works",d:"Our engagement ends when the product succeeds, not when the retainer does.",I:IC.TrendUp},
     ]
     return (
@@ -515,7 +515,7 @@ function FounderSection() {
                 <FadeIn delay={.2}><div style={{textAlign:isMobile?"center":"left"}}>
                     <div style={{fontSize:11,fontWeight:600,letterSpacing:"0.14em",color:"rgba(255,255,255,.28)",textTransform:"uppercase" as const,marginBottom:16}}>Founder</div>
                     <h2 style={{fontSize:isMobile?34:42,fontFamily:"'DM Serif Display', serif",fontWeight:400,color:"#fff",letterSpacing:"-0.03em",margin:"0 0 16px",lineHeight:1.1}}>Rahul</h2>
-                    <p style={{fontSize:isMobile?14:16,color:"rgba(255,255,255,.48)",lineHeight:1.65,margin:"0 0 28px"}}>Operator with deep experience building fintech products at national scale across payments, credit, and lending. Credibility comes from outcomes — not credentials.</p>
+                    <p style={{fontSize:isMobile?14:16,color:"rgba(255,255,255,.48)",lineHeight:1.65,margin:"0 0 28px"}}>Operator with deep experience building fintech products at national scale across payments, credit, and lending. Credibility comes from outcomes - not credentials.</p>
                     <motion.a href="https://www.linkedin.com/in/rahulkhanna02/" target="_blank" rel="noopener noreferrer" style={{display:"inline-flex",alignItems:"center",gap:9,background:"rgba(255,255,255,.07)",color:"rgba(255,255,255,.78)",border:"1px solid rgba(255,255,255,.10)",borderRadius:10,padding:"11px 22px",fontSize:14,fontWeight:500,textDecoration:"none",minHeight:44}} whileHover={{background:"rgba(255,255,255,.12)",y:-2}}>
                         <IC.LinkedIn s={15} c="rgba(255,255,255,.55)"/>View Rahul's LinkedIn
                     </motion.a>
@@ -533,7 +533,7 @@ function ClosingCTA() {
             <FadeIn>
                 <Badge label="Let's Talk" Icon={IC.Chat}/>
                 <h2 style={{fontSize:isMobile?"clamp(32px,8vw,56px)":"clamp(40px,6vw,72px)",fontFamily:"'DM Serif Display', serif",fontWeight:400,letterSpacing:"-0.04em",color:"#111",margin:"24px auto 16px",lineHeight:1.1,maxWidth:700}}>Building the next big<br/>fintech product?</h2>
-                <p style={{fontSize:isMobile?14:18,color:"#777",maxWidth:500,margin:"0 auto 40px",lineHeight:1.6}}>If you believe great products need complete focus — we should talk.</p>
+                <p style={{fontSize:isMobile?14:18,color:"#777",maxWidth:500,margin:"0 auto 40px",lineHeight:1.6}}>If you believe great products need complete focus - we should talk.</p>
                 <motion.button style={{display:"inline-flex",alignItems:"center",gap:10,background:"#111",color:"#fff",border:"none",borderRadius:14,padding:"16px 36px",fontSize:isMobile?15:16,fontWeight:500,fontFamily:"inherit",cursor:"pointer",boxShadow:"0 6px 24px rgba(0,0,0,.20)",minHeight:44}} whileHover={{opacity:.86,y:-3,boxShadow:"0 12px 32px rgba(0,0,0,.25)"}} whileTap={{scale:.97}}>
                     Start a conversation <IC.Arrow s={16} c="white"/>
                 </motion.button>

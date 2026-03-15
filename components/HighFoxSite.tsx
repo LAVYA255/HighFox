@@ -241,7 +241,7 @@ function Navbar() {
         <>
         <nav style={{position:"fixed",top:0,left:0,right:0,zIndex:200,display:"flex",alignItems:"center",justifyContent:"space-between",padding:isMobile?"0 16px":"0 44px",height:58,background:"rgba(248,247,245,.92)",backdropFilter:"blur(14px)",borderBottom:"1px solid rgba(0,0,0,.06)"}}>
             <a href="#" style={{display:"flex",alignItems:"center",gap:9,fontWeight:700,fontSize:16,color:"#0d0d0d",textDecoration:"none",letterSpacing:"-0.02em",fontFamily:"'Inter', sans-serif"}}>
-                <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><rect width="26" height="26" rx="5" fill="#111"/><path d="M7 13L11 9L15 13L11 17Z" fill="white"/><path d="M12 13L16 9L20 13L16 17Z" fill="white" opacity={0.5}/></svg>
+                <Image src="/Highfox Black Background Logo.png" alt="Highfox" width={28} height={28} style={{borderRadius:6,display:"block"}}/>
                 Highfox
             </a>
             {!isMobile && (

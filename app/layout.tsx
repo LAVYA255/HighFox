@@ -8,6 +8,10 @@ const jost = Jost({ subsets: ["latin"], variable: "--font-jost", weight: ["400",
 export const metadata: Metadata = {
   title: "Highfox - Fintech Product Builders",
   description: "We don't consult. We build fintech products that scale.",
+  icons: {
+    icon: "/Highfox Black Background Logo.png",
+    apple: "/Highfox Black Background Logo.png",
+  },
 }
 
 export default function RootLayout({

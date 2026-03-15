@@ -2,7 +2,7 @@
 // HighfoxSite.tsx - Complete website
 // React + Framer Motion + Iconify. Zero emojis - all inline SVG icons.
 
-import { motion, useAnimationFrame, useInView, useReducedMotion } from "framer-motion"
+import { motion, useInView } from "framer-motion"
 import { Icon as IFY } from "@iconify/react"
 import { createContext, useContext, useEffect, useRef, useState } from "react"
 import type { CSSProperties } from "react"
@@ -60,152 +60,6 @@ const IC = {
     Quote:     ({ s = 30, c = "#111" }) => <svg width={s} height={s*0.75} viewBox="0 0 32 24" fill="none"><path d="M0 24V14.4C0 6.4 4.267 1.6 12.8 0l1.6 2.4C9.6 3.6 7.2 6.267 6.4 10.4H12.8V24H0zm19.2 0V14.4C19.2 6.4 23.467 1.6 32 0l1.6 2.4C28.8 3.6 26.4 6.267 25.6 10.4H32V24H19.2z" fill={c}/></svg>,
 }
 
-// ─── RIPPLE (zero React re-renders — direct DOM setAttribute) ────────────────
-const RC = 5, RD = 5500, RXS = 80, RXE = 900
-const ew = (t: number) => 1 - Math.pow(1 - t, 1.5)
-const MAX_RINGS = 5
-const CX = 900, CY = 900, W = 1800, H = 1800
-
-function RippleSVG() {
-    const shouldReduceMotion = useReducedMotion()
-    const { isPhone, isMobile } = useBreakpoint()
-
-    // All refs — never causes re-renders
-    const elRef    = useRef(0)
-    const bucketRef = useRef(0)
-    const smallRef  = useRef(false)
-    const gRefs     = useRef<(SVGGElement   | null)[]>(Array(MAX_RINGS).fill(null))
-    const c0Refs    = useRef<(SVGCircleElement | null)[]>(Array(MAX_RINGS).fill(null))
-    const c1Refs    = useRef<(SVGCircleElement | null)[]>(Array(MAX_RINGS).fill(null))
-    const c2Refs    = useRef<(SVGCircleElement | null)[]>(Array(MAX_RINGS).fill(null))
-    const c3Refs    = useRef<(SVGCircleElement | null)[]>(Array(MAX_RINGS).fill(null))
-
-    useEffect(() => {
-        const update = () => { smallRef.current = window.innerWidth < 900 }
-        update()
-        window.addEventListener("resize", update, { passive: true })
-        return () => window.removeEventListener("resize", update)
-    }, [])
-
-    useAnimationFrame((_, d) => {
-        if (shouldReduceMotion) return
-        elRef.current   += d
-        bucketRef.current += d
-        // 30fps desktop, 16fps mobile — ripple is background decoration
-        const interval = smallRef.current ? 62 : 33
-        if (bucketRef.current < interval) return
-        bucketRef.current = 0
-
-        const count   = smallRef.current ? 3 : MAX_RINGS
-        const spacing = RD / count
-        const blurOn  = !smallRef.current
-
-        for (let i = 0; i < MAX_RINGS; i++) {
-            const g = gRefs.current[i]
-            if (!g) continue
-            if (i >= count) { g.setAttribute("opacity", "0"); continue }
-
-            const rawP = ((elRef.current + i * spacing) % RD) / RD
-            const p    = ew(rawP)
-            const rx   = RXS + (RXE - RXS) * p
-            const opacity = rawP < 0.05 ? rawP / 0.05 : rawP < 0.30 ? 1 : Math.pow(1 - (rawP - 0.30) / 0.70, 1.4)
-            const h    = Math.max(3, 22 * (1 - p * 0.75))
-            const sv   = p * p * 0.14
-            const cv   = Math.pow(1 - p * 0.60, 0.7)
-            const sz   = rx < 300 ? "sm" : rx < 620 ? "md" : "lg"
-            const filt = blurOn ? `url(#fo-${sz})` : ""
-
-            g.setAttribute("opacity", opacity < 0 ? "0" : opacity.toFixed(3))
-
-            const c0 = c0Refs.current[i]
-            if (c0) {
-                c0.setAttribute("r", (rx * 1.02).toFixed(1))
-                c0.setAttribute("stroke", `rgba(150,148,145,${(0.04 + sv * 1.2).toFixed(3)})`)
-                c0.setAttribute("stroke-width", (h * (1.4 + p * 1.8)).toFixed(1))
-                if (blurOn) c0.setAttribute("filter", `url(#fo-${sz})`); else c0.removeAttribute("filter")
-            }
-            const c1 = c1Refs.current[i]
-            if (c1) {
-                c1.setAttribute("r", (rx * 0.97).toFixed(1))
-                c1.setAttribute("stroke", `rgba(0,0,0,${(0.02 + sv).toFixed(3)})`)
-                c1.setAttribute("stroke-width", (h * (1 + p * 1.4)).toFixed(1))
-                if (blurOn) c1.setAttribute("filter", `url(#fs-${sz})`); else c1.removeAttribute("filter")
-            }
-            const c2 = c2Refs.current[i]
-            if (c2) {
-                c2.setAttribute("r", rx.toFixed(1))
-                c2.setAttribute("stroke", `rgba(255,255,255,${(0.96 * cv).toFixed(3)})`)
-                c2.setAttribute("stroke-width", (h * 0.7).toFixed(1))
-                if (blurOn) c2.setAttribute("filter", `url(#fc-${sz})`); else c2.removeAttribute("filter")
-            }
-            const c3 = c3Refs.current[i]
-            if (c3) {
-                c3.setAttribute("r", (rx * 1.003).toFixed(1))
-                c3.setAttribute("stroke", `rgba(255,255,255,${(0.70 * cv).toFixed(3)})`)
-                c3.setAttribute("stroke-width", Math.max(2, h * 0.25).toFixed(1))
-                if (blurOn) c3.setAttribute("filter", `url(#fc-${sz})`); else c3.removeAttribute("filter")
-            }
-        }
-    })
-
-    // Skip rendering on phones entirely — too expensive, purely decorative
-    if (isPhone) return null
-
-    const blurs: Record<string, [number, number, number]> = { fc: [4,7,11], fs: [6,11,17], fo: [9,16,24] }
-
-    return (
-        <div style={{position:"absolute",top:"58%",left:"50%",transform:"translate(-50%,-50%) translateZ(0)",width:"150%",pointerEvents:"none",zIndex:2,willChange:"transform"}}>
-            <svg viewBox={`0 0 ${W} ${H}`} style={{width:"100%",height:"auto",display:"block",transformOrigin:"50% 50%",transform:"perspective(600px) rotateX(58deg)",overflow:"visible"}}>
-                {!isMobile && (
-                    <defs>
-                        {Object.entries(blurs).map(([id, vals]) =>
-                            (["sm","md","lg"] as const).map((s, j) => (
-                                <filter key={`${id}-${s}`} id={`${id}-${s}`} x="-60%" y="-60%" width="220%" height="220%">
-                                    <feGaussianBlur stdDeviation={vals[j]}/>
-                                </filter>
-                            ))
-                        )}
-                    </defs>
-                )}
-                {Array.from({length: MAX_RINGS}, (_, i) => (
-                    <g key={i} ref={el => { gRefs.current[i] = el }} opacity={0}>
-                        <circle ref={el => { c0Refs.current[i] = el }} cx={CX} cy={CY} r={RXS} fill="none" stroke="transparent" strokeWidth={3}/>
-                        <circle ref={el => { c1Refs.current[i] = el }} cx={CX} cy={CY} r={RXS} fill="none" stroke="transparent" strokeWidth={3}/>
-                        <circle ref={el => { c2Refs.current[i] = el }} cx={CX} cy={CY} r={RXS} fill="none" stroke="transparent" strokeWidth={3}/>
-                        <circle ref={el => { c3Refs.current[i] = el }} cx={CX} cy={CY} r={RXS} fill="none" stroke="transparent" strokeWidth={2}/>
-                    </g>
-                ))}
-            </svg>
-        </div>
-    )
-}
-
-// ─── ORB ──────────────────────────────────────────────────────────────────────
-function OrbSphere() {
-    const { isMobile, isPhone } = useBreakpoint()
-    const b1=useRef<HTMLDivElement>(null),b2=useRef<HTMLDivElement>(null),g1=useRef<HTMLDivElement>(null),g2=useRef<HTMLDivElement>(null)
-    // Skip on phones — too many filter/blur layers for low-end GPUs
-    if (isPhone) return null
-    const size = isMobile ? 160 : 320
-    const marginL = -size/2
-    const marginT = isMobile ? -110 : -210
-    return (
-        <motion.div style={{position:"absolute",zIndex:10,top:"50%",left:"50%",width:size,height:size,marginLeft:marginL,marginTop:marginT,willChange:"transform",transform:"translateZ(0)"}}
-            animate={{y:[0,-18,0]}} transition={{duration:2.2,repeat:Infinity,ease:"easeInOut"}}
-            onUpdate={(l)=>{const t=(-(l.y as number))/18;if(b1.current)b1.current.style.top=`${46+t*7}%`;if(b2.current)b2.current.style.top=`${58+t*6}%`;if(g1.current)g1.current.style.top=`${53+t*6}%`;if(g2.current)g2.current.style.top=`${64+t*5}%`}}>
-            <div style={{width:"100%",height:"100%",borderRadius:"50%",position:"relative",overflow:"hidden",background:"#fafafa",boxShadow:"0 0 0 1px rgba(180,178,175,.20),0 12px 40px rgba(0,0,0,.07),0 30px 80px rgba(0,0,0,.05),inset 0 -20px 50px rgba(0,0,0,.05),inset 1px 2px 8px rgba(255,255,255,.80)",filter:"blur(.4px)"}}>
-                <div style={{position:"absolute",top:0,left:0,right:0,height:"62%",borderRadius:"50% 50% 40% 40%/55% 55% 45% 45%",background:"radial-gradient(ellipse 100% 100% at 50% 0%,#c2c2c2 0%,#d2d2d2 14%,#e2e2e2 28%,#eee 44%,#f5f5f5 58%,transparent 78%)",filter:"blur(8px)",pointerEvents:"none"}}/>
-                <div style={{position:"absolute",top:"12%",left:"18%",width:"30%",height:"16%",borderRadius:"50%",background:"radial-gradient(ellipse,rgba(255,255,255,.70) 0%,rgba(255,255,255,.30) 45%,transparent 80%)",transform:"rotate(-25deg)",filter:"blur(6px)",pointerEvents:"none"}}/>
-                <div ref={b1} style={{position:"absolute",top:"46%",left:"-8%",width:"116%",height:"9%",borderRadius:"50%",background:"radial-gradient(ellipse 90% 100% at 50% 50%,rgba(255,255,255,.90) 0%,rgba(255,255,255,.60) 40%,rgba(255,255,255,.15) 70%,transparent 90%)",filter:"blur(5px)",pointerEvents:"none"}}/>
-                <div ref={g1} style={{position:"absolute",top:"53%",left:"-5%",width:"110%",height:"7%",borderRadius:"50%",background:"radial-gradient(ellipse 85% 100% at 50% 50%,rgba(160,160,160,.18) 0%,rgba(160,160,160,.06) 55%,transparent 80%)",filter:"blur(6px)",pointerEvents:"none"}}/>
-                <div ref={b2} style={{position:"absolute",top:"58%",left:"-5%",width:"110%",height:"8%",borderRadius:"50%",background:"radial-gradient(ellipse 80% 100% at 50% 50%,rgba(255,255,255,.70) 0%,rgba(255,255,255,.35) 45%,transparent 75%)",filter:"blur(6px)",pointerEvents:"none"}}/>
-                <div ref={g2} style={{position:"absolute",top:"64%",left:"5%",width:"90%",height:"6%",borderRadius:"50%",background:"radial-gradient(ellipse 75% 100% at 50% 50%,rgba(150,150,150,.12) 0%,transparent 75%)",filter:"blur(7px)",pointerEvents:"none"}}/>
-                <div style={{position:"absolute",inset:0,borderRadius:"50%",boxShadow:"inset 0 0 30px 10px rgba(0,0,0,.05),inset 0 0 60px 20px rgba(0,0,0,.03)",pointerEvents:"none"}}/>
-            </div>
-            <div style={{position:"absolute",bottom:-18,left:"50%",transform:"translateX(-50%)",width:"85%",height:22,background:"radial-gradient(ellipse,rgba(0,0,0,.22) 0%,rgba(0,0,0,.08) 50%,transparent 75%)",filter:"blur(10px)",borderRadius:"50%"}}/>
-        </motion.div>
-    )
-}
 
 // ─── SHARED COMPONENTS ────────────────────────────────────────────────────────
 function Badge({ label, Icon }: { label: string; Icon: any }) {
@@ -234,15 +88,16 @@ function Navbar() {
     const { isMobile } = useBreakpoint()
     const [drawerOpen, setDrawerOpen] = useState(false)
     const navLinks = [
-        {label:"Products",    href:"#products"},
-        {label:"How We Work", href:"#how-we-work"},
-        {label:"Expertise",   href:"#expertise"},
+        {label:"Expertise",      href:"#expertise"},
+        {label:"Process",        href:"#how-we-work"},
+        {label:"Our Difference", href:"#our-difference"},
+        {label:"Products",       href:"#products"},
     ]
     return (
         <>
         <nav style={{position:"fixed",top:0,left:0,right:0,zIndex:200,display:"flex",alignItems:"center",justifyContent:"space-between",padding:isMobile?"0 16px":"0 44px",height:58,background:"rgba(248,247,245,.92)",backdropFilter:"blur(14px)",borderBottom:"1px solid rgba(0,0,0,.06)"}}>
-            <a href="#" style={{display:"flex",alignItems:"center",gap:9,fontWeight:700,fontSize:16,color:"#0d0d0d",textDecoration:"none",letterSpacing:"-0.02em",fontFamily:"'Inter', sans-serif"}}>
-                <Image src="/Highfox Black Background Logo.png" alt="Highfox" width={28} height={28} style={{borderRadius:6,display:"block"}}/>
+            <a href="#" style={{display:"flex",alignItems:"center",gap:9,fontWeight:700,fontSize:21,color:"#0d0d0d",textDecoration:"none",letterSpacing:"-0.02em",fontFamily:"'Inter', sans-serif"}}>
+                <Image src="/Highfox Black Background Logo.png" alt="Highfox" width={30} height={30} style={{borderRadius:6,display:"block"}}/>
                 Highfox
             </a>
             {!isMobile && (
@@ -270,8 +125,10 @@ function Navbar() {
                 style={{position:"fixed",top:0,right:0,bottom:0,width:"80vw",maxWidth:300,background:"#fff",zIndex:300,boxShadow:"-8px 0 40px rgba(0,0,0,.14)",display:"flex",flexDirection:"column",padding:"20px 24px",gap:0}}
             >
                 <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:36}}>
-                    <a href="#" style={{display:"flex",alignItems:"center",gap:9,fontWeight:700,fontSize:16,color:"#0d0d0d",textDecoration:"none",fontFamily:"'Inter', sans-serif"}}>
-                        <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><rect width="26" height="26" rx="5" fill="#111"/><path d="M7 13L11 9L15 13L11 17Z" fill="white"/><path d="M12 13L16 9L20 13L16 17Z" fill="white" opacity={0.5}/></svg>
+                    <a href="#" style={{display:"flex",alignItems:"center",gap:9,fontWeight:700,fontSize:21,color:"#0d0d0d",textDecoration:"none",fontFamily:"'Inter', sans-serif"}}>
+                        <div style={{width:30,height:30,borderRadius:6,background:"#111",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,overflow:"hidden"}}>
+                            <Image src="/Highfox Black Background Logo.png" alt="Highfox" width={30} height={30} style={{display:"block"}}/>
+                        </div>
                         Highfox
                     </a>
                     <motion.button onClick={()=>setDrawerOpen(false)} style={{background:"none",border:"none",cursor:"pointer",padding:10,minHeight:44,display:"flex",alignItems:"center",justifyContent:"center"}} whileTap={{scale:.92}}>
@@ -295,34 +152,29 @@ function Navbar() {
 // ─── HERO ─────────────────────────────────────────────────────────────────────
 function HeroContent() {
     const { isMobile, isPhone } = useBreakpoint()
-    const ct={hidden:{},visible:{transition:{staggerChildren:.1,delayChildren:.25}}}
-    const it={hidden:{opacity:0,y:isMobile?11:22},visible:{opacity:1,y:0,transition:{duration:.75,ease:[.22,1,.36,1]}}}
     return (
-        <motion.div
-            style={{
-                position:"relative",zIndex:20,display:"flex",flexDirection:"column",
-                alignItems:"center",gap:isMobile?16:20,textAlign:"center",
-                marginTop:isMobile?-20:20,
-                padding:isMobile?"0 18px":0,
-                width:"100%",
-            }}
-            variants={ct} initial="hidden" animate="visible"
-        >
-            <motion.div variants={it} style={{display:"inline-flex",alignItems:"center",gap:7,background:"rgba(255,255,255,.84)",border:"1px solid rgba(0,0,0,.09)",borderRadius:100,padding:"7px 16px 7px 12px",backdropFilter:"blur(10px)"}}>
+        <div style={{
+            position:"relative",zIndex:20,display:"flex",flexDirection:"column",
+            alignItems:"center",gap:isMobile?16:20,textAlign:"center",
+            marginTop:isMobile?-20:20,
+            padding:isMobile?"0 18px":0,
+            width:"100%",
+        }}>
+            <div style={{display:"inline-flex",alignItems:"center",gap:7,background:"rgba(255,255,255,.84)",border:"1px solid rgba(0,0,0,.09)",borderRadius:100,padding:"7px 16px 7px 12px",backdropFilter:"blur(10px)"}}>
                 <IC.Lightning s={12} c="#666"/><span style={{fontSize:11,fontWeight:500,letterSpacing:"0.13em",textTransform:"uppercase" as const,color:"#2a2a2a"}}>Fintech Product Builders</span>
-            </motion.div>
-            <motion.h1 variants={it} style={{
+            </div>
+            <h1 style={{
                 fontSize:isPhone?"clamp(32px,9vw,44px)":isMobile?"clamp(38px,9vw,56px)":"clamp(44px,7vw,80px)",
                 fontWeight:700,fontFamily:"var(--font-jost), sans-serif",
                 letterSpacing:"-0.02em",lineHeight:1.1,color:"#111",
                 margin:0,maxWidth:isPhone?340:700,
             }}>
-                We don't consult.<br />We build fintech<br />products that scale.
-            </motion.h1>
-            <motion.p variants={it} style={{fontSize:isMobile?14:16,color:"#606060",maxWidth:isPhone?300:500,lineHeight:1.65,margin:0}}>
+                <span style={{whiteSpace:"nowrap"}}>We don't just consult.</span><br />We build fintech<br />products that scale.
+            </h1>
+            <p style={{fontSize:isMobile?14:16,color:"#606060",maxWidth:isPhone?300:500,lineHeight:1.65,margin:0}}>
                 Built by operators behind India's largest fintech products. UPI apps handling 300M+ monthly transactions.
-            </motion.p>
-            <motion.div variants={it} style={{display:"flex",flexDirection:isMobile?"column":"row",gap:10,width:isMobile?"100%":"auto",maxWidth:isMobile?360:"auto"}}>
+            </p>
+            <div style={{display:"flex",flexDirection:isMobile?"column":"row",gap:10,width:isMobile?"100%":"auto",maxWidth:isMobile?360:"auto"}}>
                 <motion.button
                     onClick={()=>window.open("https://www.linkedin.com/in/rahulkhanna02/","_blank")}
                     style={{display:"inline-flex",alignItems:"center",justifyContent:"center",gap:8,background:"#111",color:"#fff",border:"none",borderRadius:12,padding:"14px 26px",fontSize:15,fontWeight:500,fontFamily:"inherit",cursor:"pointer",boxShadow:"0 4px 18px rgba(0,0,0,.22)",minHeight:48,width:isMobile?"100%":"auto"}}
@@ -337,8 +189,8 @@ function HeroContent() {
                 >
                     Our Expertise
                 </motion.button>
-            </motion.div>
-        </motion.div>
+            </div>
+        </div>
     )
 }
 
@@ -346,32 +198,74 @@ function HeroContent() {
 function CredibilityStrip() {
     const { isMobile, isPhone } = useBreakpoint()
     const stats=[
-        {num:"300M+",label:"UPI transactions monthly",icon:"ph:arrows-left-right-bold"},
-        {num:"100k+",label:"Credit cards issued monthly",icon:"ph:credit-card-bold"},
-        {num:"₹100s Cr",label:"Loans disbursed monthly",icon:"ph:currency-inr-bold"},
-        {num:"One",label:"Product at a time. Always.",icon:"ph:target-bold"},
+        {cat:"PAYMENTS",  num:"300M+",    desc:"UPI transactions shipped monthly"},
+        {cat:"CREDIT",    num:"100k+",    desc:"Highest monthly credit card issuance"},
+        {cat:"LENDING",   num:"₹100s Cr", desc:"Disbursed monthly on lending platforms"},
     ]
+    const B = "1px solid rgba(255,255,255,.10)"
     return (
-        <section style={{background:"#111",padding:isMobile?"36px 18px":"44px 80px"}}>
+        <FadeIn>
+        <section style={{background:"#111",paddingLeft:isPhone?18:isMobile?24:190,paddingRight:isPhone?18:isMobile?24:140}}>
+            {/* Top row — 3 stats */}
             <div style={{
-                maxWidth:1100,margin:"0 auto",
                 display:"grid",
-                gridTemplateColumns:isPhone?"1fr 1fr":isMobile?"1fr 1fr":"repeat(4,1fr)",
-                gap:isPhone?20:isMobile?28:40,
+                gridTemplateColumns:isPhone?"1fr":isMobile?"1fr 1fr":"repeat(3,1fr)",
+                borderBottom:B,
             }}>
                 {stats.map((s,i)=>(
-                    <FadeIn key={i} delay={i*.08}>
-                        <div style={{display:"flex",flexDirection:"column",alignItems:"center",textAlign:"center",gap:8}}>
-                            <div style={{width:38,height:38,borderRadius:10,background:"rgba(255,255,255,.10)",display:"flex",alignItems:"center",justifyContent:"center"}}>
-                                <IFY icon={s.icon} width={18} color="rgba(255,255,255,.65)"/>
-                            </div>
-                            <div style={{fontSize:isPhone?22:isMobile?26:34,fontWeight:700,color:"#fff",fontFamily:"'Inter', sans-serif",letterSpacing:"-0.03em",lineHeight:1}}>{s.num}</div>
-                            <div style={{fontSize:isPhone?11:12,color:"rgba(255,255,255,.55)",letterSpacing:"0.01em",lineHeight:1.4}}>{s.label}</div>
-                        </div>
-                    </FadeIn>
+                    <div key={i} style={{
+                        padding:isPhone?"28px 24px":isMobile?"28px 20px":"44px 56px",
+                        borderRight: isPhone ? "none" : isMobile ? (i===0 ? B : "none") : (i<2 ? B : "none"),
+                        borderBottom: isPhone && i<2 ? B : "none",
+                    }}>
+                        <div style={{fontSize:10,fontWeight:700,letterSpacing:"0.14em",color:"rgba(255,255,255,.35)",textTransform:"uppercase" as const,marginBottom:12}}>{s.cat}</div>
+                        <div style={{fontSize:isPhone?36:isMobile?38:52,fontWeight:700,color:"#fff",fontFamily:"'Inter', sans-serif",letterSpacing:"-0.04em",lineHeight:1,marginBottom:10}}>{s.num}</div>
+                        <div style={{fontSize:isPhone?13:14,color:"rgba(255,255,255,.50)",lineHeight:1.55,maxWidth:220}}>{s.desc}</div>
+                    </div>
                 ))}
             </div>
+            {/* Bottom row — ONE product at a time */}
+            <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr"}}>
+                <div style={{
+                    padding:isPhone?"28px 24px":isMobile?"28px 20px":"44px 56px",
+                    borderRight:isMobile?"none":B,
+                    borderBottom:isMobile?B:"none",
+                    display:"flex",alignItems:"center",gap:isMobile?16:24,
+                }}>
+                    <div style={{
+                        fontSize:isPhone?52:isMobile?56:72,
+                        fontWeight:700,color:"#fff",fontFamily:"'Inter', sans-serif",
+                        letterSpacing:"-0.05em",lineHeight:1,flexShrink:0,
+                    }}>ONE</div>
+                    <div style={{fontSize:isPhone?15:isMobile?16:18,fontWeight:600,color:"rgba(255,255,255,.90)",fontFamily:"'Inter', sans-serif",letterSpacing:"-0.02em",lineHeight:1.35}}>product at a time.<br/>No exceptions.</div>
+                </div>
+                <div style={{padding:isPhone?"24px 24px 32px":isMobile?"20px 20px 32px":"44px 56px",display:"flex",alignItems:"center"}}>
+                    <p style={{fontSize:isPhone?14:isMobile?14:16,color:"rgba(255,255,255,.45)",lineHeight:1.75,margin:0,maxWidth:440}}>We don't run parallel engagements. When we're building yours, every person on our team is building yours.</p>
+                </div>
+            </div>
         </section>
+        </FadeIn>
+    )
+}
+
+// ─── QUOTE BANNER ─────────────────────────────────────────────────────────────
+function QuoteBanner() {
+    const { isMobile } = useBreakpoint()
+    return (
+        <FadeIn>
+            <div style={{background:"#111",padding:isMobile?"52px 24px":"80px 80px",textAlign:"center"}}>
+                <p style={{
+                    fontSize:isMobile?"clamp(20px,5vw,28px)":"clamp(24px,3vw,36px)",
+                    fontWeight:500,fontFamily:"'Inter', sans-serif",
+                    letterSpacing:"-0.02em",lineHeight:1.5,
+                    color:"rgba(255,255,255,.92)",
+                    margin:"0 auto",maxWidth:760,
+                    fontStyle:"italic",
+                }}>
+                    "Great fintech products are not designed in boardrooms. They are built through deep focus and obsession."
+                </p>
+            </div>
+        </FadeIn>
     )
 }
 
@@ -381,10 +275,10 @@ function WhyDifferent() {
     const trad=["Strategy decks","Multiple parallel clients","Advisory ownership","Diluted attention","Workshops & frameworks"]
     const hfox=["Embedded product leadership","One engagement at a time","Outcome ownership","Execution-first always","Build alongside your team"]
     return (
-        <section style={{background:"#f0efed",padding:isMobile?"52px 18px":"100px 80px"}}>
+        <section id="our-difference" style={{background:"#f0efed",padding:isMobile?"52px 18px":"100px 80px"}}>
             <div style={{maxWidth:1100,margin:"0 auto"}}>
                 <FadeIn><div style={{textAlign:"center",marginBottom:isMobile?44:64}}>
-                    <Badge label="What Makes Us Different" Icon={IC.Scale}/>
+                    <Badge label="Our Difference" Icon={IC.Scale}/>
                     <h2 style={{fontSize:isMobile?"clamp(28px,7vw,44px)":"clamp(36px,5vw,60px)",fontFamily:"'Inter', sans-serif",fontWeight:700,letterSpacing:"-0.03em",color:"#111",marginTop:20,marginBottom:12}}>Not consultants.<br/>Product builders.</h2>
                 </div></FadeIn>
                 <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:isMobile?16:24}}>
@@ -415,9 +309,9 @@ function Expertise() {
     const { isMobile } = useBreakpoint()
     const dom=[
         {icon:"ph:qr-code-bold",          title:"UPI",                  desc:"Designing and scaling high-throughput payment experiences handling hundreds of millions of monthly transactions.", dark:true},
-        {icon:"ph:credit-card-bold",       title:"Credit Cards",         desc:"Building acquisition, onboarding, and engagement systems for mass-scale issuance & usage.", dark:false},
-        {icon:"ph:hand-coins-bold",        title:"Loans",                desc:"End-to-end lending journeys from risk orchestration to disbursal and lifecycle management.", dark:false},
-        {icon:"ph:trophy-bold",            title:"Rewards & Engagement", desc:"Creating habit-forming reward ecosystems that drive retention and transaction growth.", dark:false},
+        {icon:"ph:credit-card-bold",       title:"Credit Cards",         desc:"Building acquisition, onboarding, and engagement systems for mass-scale issuance & usage.", dark:true},
+        {icon:"ph:hand-coins-bold",        title:"Loans",                desc:"End-to-end lending journeys from risk orchestration to disbursal and lifecycle management.", dark:true},
+        {icon:"ph:trophy-bold",            title:"Rewards & Engagement", desc:"Creating habit-forming reward ecosystems that drive retention and transaction growth.", dark:true},
     ]
     return (
         <section id="expertise" style={{background:"#f8f7f5",padding:isMobile?"52px 18px":"100px 80px"}}>
@@ -501,23 +395,25 @@ function HowWeWork() {
         {n:"04",t:"We stay until it works",d:"Our engagement ends when the product succeeds, not when the retainer does.",I:IC.TrendUp},
     ]
     return (
-        <section id="how-we-work" style={{background:"#f8f7f5",padding:isMobile?"52px 18px":"100px 80px"}}>
+        <section id="how-we-work" style={{background:"#111",padding:isMobile?"52px 18px":"100px 80px"}}>
             <div style={{maxWidth:1100,margin:"0 auto"}}>
                 <FadeIn><div style={{textAlign:"center",marginBottom:isMobile?44:60}}>
                     <Badge label="Process" Icon={IC.Gear}/>
-                    <h2 style={{fontSize:isMobile?"clamp(28px,7vw,44px)":"clamp(36px,5vw,58px)",fontFamily:"'Inter', sans-serif",fontWeight:700,letterSpacing:"-0.03em",color:"#111",marginTop:20,marginBottom:12}}>Our Model<br/>Is Simple</h2>
-                    <p style={{fontSize:isMobile?14:16,color:"#777",maxWidth:480,margin:"0 auto",lineHeight:1.6}}>No parallel clients. No diluted attention. No advisory-only engagements.</p>
+                    <h2 style={{fontSize:isMobile?"clamp(28px,7vw,44px)":"clamp(36px,5vw,58px)",fontFamily:"'Inter', sans-serif",fontWeight:700,letterSpacing:"-0.03em",color:"#fff",marginTop:20,marginBottom:12}}>Our Model<br/>Is Simple</h2>
+                    <p style={{fontSize:isMobile?14:16,color:"rgba(255,255,255,.45)",maxWidth:480,margin:"0 auto",lineHeight:1.6}}>No parallel clients. No diluted attention. No advisory-only engagements.</p>
                 </div></FadeIn>
                 <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"repeat(2,1fr)",gap:isMobile?14:20}}>
-                    {steps.map((s,i)=><FadeIn key={i} delay={i*.1}><Card>
-                        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:20}}>
-                            <div style={{fontSize:38,fontFamily:"'Inter', sans-serif",fontWeight:400,color:"rgba(0,0,0,.18)",letterSpacing:"-0.04em",lineHeight:1}}>{s.n}</div>
-                            <div style={{width:36,height:36,borderRadius:10,background:"rgba(0,0,0,.08)",display:"flex",alignItems:"center",justifyContent:"center"}}><s.I s={18} c="#333"/></div>
-                        </div>
-                        <div style={{width:"100%",height:1,background:"rgba(0,0,0,.12)",marginBottom:20}}/>
-                        <h3 style={{fontSize:isMobile?16:18,fontWeight:600,color:"#111",margin:"0 0 10px",letterSpacing:"-0.02em"}}>{s.t}</h3>
-                        <p style={{fontSize:14,color:"#555",lineHeight:1.65,margin:0}}>{s.d}</p>
-                    </Card></FadeIn>)}
+                    {steps.map((s,i)=><FadeIn key={i} delay={i*.1}>
+                        <motion.div style={{background:"rgba(255,255,255,.05)",border:"1px solid rgba(255,255,255,.09)",borderRadius:20,padding:isMobile?20:32,height:"100%",boxSizing:"border-box"}} whileHover={{background:"rgba(255,255,255,.08)"}} transition={{duration:.25}}>
+                            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:20}}>
+                                <div style={{fontSize:38,fontFamily:"'Inter', sans-serif",fontWeight:400,color:"rgba(255,255,255,.18)",letterSpacing:"-0.04em",lineHeight:1}}>{s.n}</div>
+                                <div style={{width:36,height:36,borderRadius:10,background:"rgba(255,255,255,.10)",display:"flex",alignItems:"center",justifyContent:"center"}}><s.I s={18} c="rgba(255,255,255,.70)"/></div>
+                            </div>
+                            <div style={{width:"100%",height:1,background:"rgba(255,255,255,.10)",marginBottom:20}}/>
+                            <h3 style={{fontSize:isMobile?16:18,fontWeight:600,color:"#fff",margin:"0 0 10px",letterSpacing:"-0.02em"}}>{s.t}</h3>
+                            <p style={{fontSize:14,color:"rgba(255,255,255,.45)",lineHeight:1.65,margin:0}}>{s.d}</p>
+                        </motion.div>
+                    </FadeIn>)}
                 </div>
             </div>
         </section>
@@ -529,19 +425,19 @@ function HowWeWork() {
 function ClosingCTA() {
     const { isMobile } = useBreakpoint()
     return (
-        <section style={{background:"#f8f7f5",padding:isMobile?"60px 18px":"120px 80px",textAlign:"center"}}>
+        <section style={{background:"#0a0a0a",padding:isMobile?"60px 18px":"120px 80px",textAlign:"center"}}>
             <FadeIn>
                 <Badge label="Let's Talk" Icon={IC.Chat}/>
-                <h2 style={{fontSize:isMobile?"clamp(30px,8vw,52px)":"clamp(40px,6vw,72px)",fontFamily:"'Inter', sans-serif",fontWeight:700,letterSpacing:"-0.04em",color:"#111",margin:"24px auto 16px",lineHeight:1.1,maxWidth:700}}>Building the next big<br/>fintech product?</h2>
-                <p style={{fontSize:isMobile?14:18,color:"#777",maxWidth:480,margin:"0 auto 36px",lineHeight:1.65}}>If you believe great products need complete focus, we should talk.</p>
+                <h2 style={{fontSize:isMobile?"clamp(30px,8vw,52px)":"clamp(40px,6vw,72px)",fontFamily:"'Inter', sans-serif",fontWeight:700,letterSpacing:"-0.04em",color:"#fff",margin:"24px auto 16px",lineHeight:1.1,maxWidth:700}}>Building the next big<br/>fintech product?</h2>
+                <p style={{fontSize:isMobile?14:18,color:"rgba(255,255,255,.45)",maxWidth:480,margin:"0 auto 36px",lineHeight:1.65}}>If you believe great products need complete focus, we should talk.</p>
                 <motion.button
                     onClick={()=>window.open("https://www.linkedin.com/in/rahulkhanna02/","_blank")}
-                    style={{display:"inline-flex",alignItems:"center",justifyContent:"center",gap:10,background:"#111",color:"#fff",border:"none",borderRadius:14,padding:isMobile?"15px 28px":"16px 36px",fontSize:isMobile?15:16,fontWeight:500,fontFamily:"inherit",cursor:"pointer",boxShadow:"0 6px 24px rgba(0,0,0,.20)",minHeight:48,width:isMobile?"100%":"auto",maxWidth:isMobile?360:"auto"}}
-                    whileHover={{opacity:.86,y:-3,boxShadow:"0 12px 32px rgba(0,0,0,.25)"}} whileTap={{scale:.97}}
+                    style={{display:"inline-flex",alignItems:"center",justifyContent:"center",gap:10,background:"#fff",color:"#111",border:"none",borderRadius:14,padding:isMobile?"15px 28px":"16px 36px",fontSize:isMobile?15:16,fontWeight:500,fontFamily:"inherit",cursor:"pointer",boxShadow:"0 6px 24px rgba(0,0,0,.40)",minHeight:48,width:isMobile?"100%":"auto",maxWidth:isMobile?360:"auto"}}
+                    whileHover={{opacity:.88,y:-3}} whileTap={{scale:.97}}
                 >
-                    Start a conversation <IC.Arrow s={16} c="white"/>
+                    Start a conversation <IC.Arrow s={16} c="#111"/>
                 </motion.button>
-                <div style={{marginTop:40,fontSize:11,color:"#bbb",letterSpacing:"0.08em",textTransform:"uppercase" as const}}>One product at a time. Always.</div>
+                <div style={{marginTop:40,fontSize:11,color:"rgba(255,255,255,.25)",letterSpacing:"0.08em",textTransform:"uppercase" as const}}>One product at a time. Always.</div>
             </FadeIn>
         </section>
     )
@@ -575,14 +471,15 @@ export default function HighfoxSite() {
         <BreakpointProvider>
         <div style={{width:"100%",fontFamily:"'Inter', sans-serif",background:"#f8f7f5",overflowX:"hidden"}}>
             <Navbar/>
-            <section style={{position:"relative",width:"100%",height:"var(--hero-h, 100vh)",minHeight:560,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",overflow:"hidden",background:"radial-gradient(ellipse 85% 65% at 50% 46%,#f2f0ee 0%,#f8f7f5 55%,#ffffff 100%)"}}>
-                <RippleSVG/><OrbSphere/><HeroContent/>
+            <section style={{width:"100%",height:"var(--hero-h, 100vh)",minHeight:560,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"#f8f7f5"}}>
+                <HeroContent/>
             </section>
             <CredibilityStrip/>
-            <WhyDifferent/>
             <Expertise/>
-            <ProductsBuilt/>
             <HowWeWork/>
+            <WhyDifferent/>
+            <QuoteBanner/>
+            <ProductsBuilt/>
             <ClosingCTA/>
             <Footer/>
         </div>

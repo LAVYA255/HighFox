@@ -481,8 +481,8 @@ export default function HighfoxSite() {
                     style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",zIndex:0}}
                     src="/vecteezy_white-background-stripe-curve-wave-4k-resolution-clean_14415197.mp4"
                 />
-                {/* Subtle overlay to ensure text readability */}
-                <div style={{position:"absolute",inset:0,background:"rgba(248,247,245,0.35)",zIndex:1}}/>
+                {/* Overlay — matches site background #f8f7f5 at high opacity, keeps faint motion */}
+                <div style={{position:"absolute",inset:0,background:"rgba(248,247,245,0.70)",zIndex:1}}/>
                 <HeroContent/>
             </section>
             <CredibilityStrip/>

@@ -28,8 +28,9 @@ function FadeIn({ children, delay = 0, y = 28, style = {} }: { children: React.R
     const inView = useInView(ref, { once: true, margin: "-60px" })
     const { isMobile } = useBreakpoint()
     const effectiveY = isMobile ? Math.round(y * 0.5) : y
+    // Don't set willChange globally — Framer Motion handles it internally during animation
     return (
-        <motion.div ref={ref} style={{willChange:"transform",...style}} initial={{ opacity: 0, y: effectiveY }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay }}>
+        <motion.div ref={ref} style={style} initial={{ opacity: 0, y: effectiveY }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay }}>
             {children}
         </motion.div>
     )
@@ -217,7 +218,7 @@ function Badge({ label, Icon }: { label: string; Icon: any }) {
 function Card({ children, style={}, hover=true }: { children:React.ReactNode; style?:CSSProperties; hover?:boolean }) {
     const { isMobile } = useBreakpoint()
     return (
-        <motion.div style={{background:"#fff",border:"1px solid rgba(0,0,0,.11)",borderRadius:20,padding:isMobile?20:32,backdropFilter:"blur(8px)",boxShadow:"0 2px 20px rgba(0,0,0,.07)",height:"100%",boxSizing:"border-box",...style}}
+        <motion.div style={{background:"#fff",border:"1px solid rgba(0,0,0,.11)",borderRadius:20,padding:isMobile?20:32,boxShadow:"0 2px 20px rgba(0,0,0,.07)",height:"100%",boxSizing:"border-box",...style}}
             whileHover={hover?{y:-4,boxShadow:"0 8px 32px rgba(0,0,0,.08)"}:{}} transition={{duration:.25}}>{children}
         </motion.div>
     )
@@ -455,7 +456,7 @@ function ProductsBuilt() {
                 </div></FadeIn>
                 <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:isMobile?14:24,alignItems:"stretch"}}>
                     {prods.map((p,i)=>(
-                        <FadeIn key={i} delay={i*.15} style={{height:"100%"}}>
+                        <FadeIn key={i} delay={i*.15} style={{display:"flex",flexDirection:"column"}}>
                             <Card style={{padding:0,overflow:"hidden",display:"flex",flexDirection:"column"}}>
                                 {/* Body — grows to fill card height */}
                                 <div style={{padding:isMobile?"20px 20px 20px":"32px 32px 24px",flex:1,display:"flex",flexDirection:"column"}}>
@@ -559,12 +560,11 @@ function Footer() {
                 href="https://www.linkedin.com/in/rahulkhanna02/"
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{display:"inline-flex",alignItems:"center",gap:8,background:"rgba(255,255,255,.06)",border:"1px solid rgba(255,255,255,.09)",borderRadius:9,padding:"9px 16px",color:"rgba(255,255,255,.65)",fontSize:13,fontWeight:500,textDecoration:"none",minHeight:38}}
+                style={{display:"inline-flex",alignItems:"center",justifyContent:"center",background:"rgba(255,255,255,.06)",border:"1px solid rgba(255,255,255,.09)",borderRadius:9,padding:"9px 12px",color:"rgba(255,255,255,.65)",textDecoration:"none",minHeight:38}}
                 whileHover={{background:"rgba(255,255,255,.11)",y:-1}}
                 whileTap={{scale:.97}}
             >
-                <IFY icon="ri:linkedin-fill" width={15} color="rgba(255,255,255,.65)"/>
-                LinkedIn
+                <IFY icon="ri:linkedin-fill" width={18} color="rgba(255,255,255,.65)"/>
             </motion.a>
         </footer>
     )

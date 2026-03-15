@@ -6,9 +6,37 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
+  font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Remove tap highlight on mobile */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button, a {
+  touch-action: manipulation;
+}
+
+/* Dynamic viewport height for hero */
+:root {
+  --hero-h: 100vh;
+}
+@supports (height: 100dvh) {
+  :root { --hero-h: 100dvh; }
+}
+
+/* Smooth image rendering */
+img {
+  max-width: 100%;
+  display: block;
 }

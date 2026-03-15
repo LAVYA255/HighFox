@@ -40,3 +40,29 @@ img {
   max-width: 100%;
   display: block;
 }
+
+/* Video never overflows */
+video {
+  max-width: 100%;
+}
+
+/* Safe area padding for notched iPhones */
+@supports (padding: max(0px)) {
+  nav {
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+  }
+}
+
+/* Prevent body scroll when mobile drawer is open */
+body.drawer-open {
+  overflow: hidden;
+}
+
+/* Better font rendering on mobile */
+@media (max-width: 768px) {
+  h1, h2, h3 {
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+}

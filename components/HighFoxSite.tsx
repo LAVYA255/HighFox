@@ -25,12 +25,11 @@ function useBreakpoint() { return useContext(BPCtx) }
 
 function FadeIn({ children, delay = 0, y = 28, style = {} }: { children: React.ReactNode; delay?: number; y?: number; style?: CSSProperties }) {
     const ref = useRef(null)
-    const inView = useInView(ref, { once: true, margin: "-60px" })
     const { isMobile } = useBreakpoint()
-    const effectiveY = isMobile ? Math.round(y * 0.5) : y
-    // Don't set willChange globally — Framer Motion handles it internally during animation
+    const inView = useInView(ref, { once: true, margin: isMobile ? "0px" : "-40px" })
+    const effectiveY = isMobile ? Math.round(y * 0.4) : y
     return (
-        <motion.div ref={ref} style={style} initial={{ opacity: 0, y: effectiveY }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay }}>
+        <motion.div ref={ref} style={style} initial={{ opacity: 0, y: effectiveY }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: isMobile ? 0.5 : 0.7, ease: [0.22, 1, 0.36, 1], delay: isMobile ? delay * 0.5 : delay }}>
             {children}
         </motion.div>
     )
@@ -87,6 +86,11 @@ function IBox({ icon, dark=false }: { icon:string; dark?:boolean }) {
 function Navbar() {
     const { isMobile } = useBreakpoint()
     const [drawerOpen, setDrawerOpen] = useState(false)
+    // Prevent background scroll when drawer is open
+    useEffect(() => {
+        document.body.classList.toggle("drawer-open", drawerOpen)
+        return () => document.body.classList.remove("drawer-open")
+    }, [drawerOpen])
     const navLinks = [
         {label:"Expertise",      href:"#expertise"},
         {label:"Process",        href:"#how-we-work"},
@@ -154,11 +158,10 @@ function HeroContent() {
     const { isMobile, isPhone } = useBreakpoint()
     return (
         <div style={{
-            position:"relative",zIndex:20,display:"flex",flexDirection:"column",
-            alignItems:"center",gap:isMobile?16:20,textAlign:"center",
-            marginTop:isMobile?-20:20,
-            padding:isMobile?"0 18px":0,
-            width:"100%",
+            position:"relative",zIndex:10,display:"flex",flexDirection:"column",
+            alignItems:"center",gap:isMobile?14:20,textAlign:"center",
+            padding:isMobile?"0 22px":"0 24px",
+            width:"100%",maxWidth:"100%",
         }}>
             <div style={{display:"inline-flex",alignItems:"center",gap:7,background:"rgba(255,255,255,.84)",border:"1px solid rgba(0,0,0,.09)",borderRadius:100,padding:"7px 16px 7px 12px",backdropFilter:"blur(10px)"}}>
                 <IC.Lightning s={12} c="#666"/><span style={{fontSize:11,fontWeight:500,letterSpacing:"0.13em",textTransform:"uppercase" as const,color:"#2a2a2a"}}>Fintech Product Builders</span>
@@ -169,7 +172,7 @@ function HeroContent() {
                 letterSpacing:"-0.02em",lineHeight:1.1,color:"#111",
                 margin:0,maxWidth:isPhone?340:700,
             }}>
-                <span style={{whiteSpace:"nowrap"}}>We don't just consult.</span><br />We build fintech<br />products that scale.
+                We don't just consult.<br />We build fintech<br />products that scale.
             </h1>
             <p style={{fontSize:isMobile?14:16,color:"#606060",maxWidth:isPhone?300:500,lineHeight:1.65,margin:0}}>
                 Built by operators behind India's largest fintech products. UPI apps handling 300M+ monthly transactions.
@@ -184,8 +187,8 @@ function HeroContent() {
                 </motion.button>
                 <motion.button
                     onClick={()=>document.getElementById("expertise")?.scrollIntoView({behavior:"smooth"})}
-                    style={{display:"inline-flex",alignItems:"center",justifyContent:"center",background:"rgba(255,255,255,.72)",color:"#111",border:"1px solid rgba(0,0,0,.12)",borderRadius:12,padding:"14px 26px",fontSize:15,fontWeight:500,fontFamily:"inherit",cursor:"pointer",backdropFilter:"blur(10px)",minHeight:48,width:isMobile?"100%":"auto"}}
-                    whileHover={{backgroundColor:"rgba(255,255,255,.96)",y:-2}} whileTap={{scale:.97}}
+                    style={{display:"inline-flex",alignItems:"center",justifyContent:"center",background:"rgba(255,255,255,.82)",color:"#111",border:"1px solid rgba(0,0,0,.12)",borderRadius:12,padding:"14px 26px",fontSize:15,fontWeight:500,fontFamily:"inherit",cursor:"pointer",minHeight:48,width:isMobile?"100%":"auto"}}
+                    whileHover={{backgroundColor:"#fff",y:-2}} whileTap={{scale:.97}}
                 >
                     Our Expertise
                 </motion.button>
@@ -350,8 +353,8 @@ function ProductsBuilt() {
                 </div></FadeIn>
                 <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:isMobile?14:24,alignItems:"stretch"}}>
                     {prods.map((p,i)=>(
-                        <FadeIn key={i} delay={i*.15} style={{display:"flex",flexDirection:"column"}}>
-                            <Card style={{padding:0,overflow:"hidden",display:"flex",flexDirection:"column"}}>
+                        <FadeIn key={i} delay={i*.15} style={{display:"flex",flexDirection:"column",flex:1}}>
+                            <Card style={{padding:0,overflow:"hidden",display:"flex",flexDirection:"column",flex:1}}>
                                 {/* Body — grows to fill card height */}
                                 <div style={{padding:isMobile?"20px 20px 20px":"32px 32px 24px",flex:1,display:"flex",flexDirection:"column"}}>
                                     <div style={{display:"inline-block",fontSize:11,fontWeight:600,letterSpacing:"0.1em",color:"#888",background:"rgba(0,0,0,.05)",borderRadius:6,padding:"4px 10px",marginBottom:20,textTransform:"uppercase" as const,alignSelf:"flex-start"}}>{p.tag}</div>
@@ -471,7 +474,15 @@ export default function HighfoxSite() {
         <BreakpointProvider>
         <div style={{width:"100%",fontFamily:"'Inter', sans-serif",background:"#f8f7f5",overflowX:"hidden"}}>
             <Navbar/>
-            <section style={{width:"100%",height:"var(--hero-h, 100vh)",minHeight:560,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"#f8f7f5"}}>
+            <section style={{position:"relative",width:"100%",height:"var(--hero-h, 100vh)",minHeight:560,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
+                {/* Full-screen video background */}
+                <video
+                    autoPlay muted loop playsInline
+                    style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",zIndex:0}}
+                    src="/vecteezy_white-background-stripe-curve-wave-4k-resolution-clean_14415197.mp4"
+                />
+                {/* Subtle overlay to ensure text readability */}
+                <div style={{position:"absolute",inset:0,background:"rgba(248,247,245,0.35)",zIndex:1}}/>
                 <HeroContent/>
             </section>
             <CredibilityStrip/>

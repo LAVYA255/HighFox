@@ -414,7 +414,7 @@ function Expertise() {
     const { isMobile } = useBreakpoint()
     const dom=[
         {icon:"ph:qr-code-bold",          title:"UPI",                  desc:"Designing and scaling high-throughput payment experiences handling hundreds of millions of monthly transactions.", dark:true},
-        {icon:"ph:credit-card-bold",       title:"Credit Cards",         desc:"Building acquisition, underwriting, onboarding, and engagement systems for mass-scale issuance.", dark:false},
+        {icon:"ph:credit-card-bold",       title:"Credit Cards",         desc:"Building acquisition, onboarding, and engagement systems for mass-scale issuance & usage.", dark:false},
         {icon:"ph:hand-coins-bold",        title:"Loans",                desc:"End-to-end lending journeys from risk orchestration to disbursal and lifecycle management.", dark:false},
         {icon:"ph:trophy-bold",            title:"Rewards & Engagement", desc:"Creating habit-forming reward ecosystems that drive retention and transaction growth.", dark:false},
     ]
@@ -442,15 +442,16 @@ function Expertise() {
 function ProductsBuilt() {
     const { isMobile } = useBreakpoint()
     const prods=[
-        {name:"Super.money",logo:"/supermoney-logo.jpeg",tag:"Payments & Engagement",desc:"Built scalable payment and engagement experiences focused on high-frequency transaction behaviour.",m1:"300M+",m1l:"Monthly transactions",m2:"Top 5",m2l:"UPI app in India"},
-        {name:"FamPay",logo:"/fampay logo.jpg",tag:"Next-Gen Fintech",desc:"Designed fintech experiences for next-gen users, combining payments, cards, and engagement into a unified product.",m1:"10M+",m1l:"Users onboarded",m2:"#1",m2l:"Teen fintech product"},
+        {name:"Super.money",logo:"/supermoney-logo.jpeg",tag:"Payments & Engagement",desc:"We built the payment and engagement stack for one of India's fastest-growing UPI apps, from onboarding flows through to reward systems designed to drive transaction frequency, not just activation.",m1:"300M+",m1l:"Monthly transactions",m2:"#5",m2l:"UPI app rank in India"},
+        {name:"FamPay",logo:"/fampay logo.jpg",tag:"Next-Gen Fintech",desc:"UPI and card products for India's under-18 audience, a demographic that had never owned a financial product, couldn't open a bank account independently, and needed a completely different product philosophy to engage.",m1:"150M+",m1l:"Monthly transactions",m2:"#6",m2l:"UPI app rank in India"},
     ]
     return (
         <section id="products" style={{background:"#f0efed",padding:isMobile?"52px 18px":"100px 80px"}}>
             <div style={{maxWidth:1100,margin:"0 auto"}}>
                 <FadeIn><div style={{textAlign:"center",marginBottom:isMobile?44:60}}>
                     <Badge label="Products" Icon={IC.Rocket}/>
-                    <h2 style={{fontSize:isMobile?"clamp(28px,7vw,44px)":"clamp(36px,5vw,58px)",fontFamily:"'Inter', sans-serif",fontWeight:700,letterSpacing:"-0.03em",color:"#111",marginTop:20,marginBottom:12}}>Operator Experience<br/>That Ships</h2>
+                    <h2 style={{fontSize:isMobile?"clamp(28px,7vw,44px)":"clamp(36px,5vw,58px)",fontFamily:"'Inter', sans-serif",fontWeight:700,letterSpacing:"-0.03em",color:"#111",marginTop:20,marginBottom:12}}>Products We Have<br/>Shipped</h2>
+                    <p style={{fontSize:isMobile?14:16,color:"#777",maxWidth:520,margin:"12px auto 0",lineHeight:1.65}}>Not case studies. These are products our team helped build from the inside.</p>
                 </div></FadeIn>
                 <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:isMobile?14:24}}>
                     {prods.map((p,i)=>(
@@ -516,37 +517,6 @@ function HowWeWork() {
     )
 }
 
-// ─── WHO WE WORK WITH ─────────────────────────────────────────────────────────
-function WhoWeWorkWith() {
-    return null
-}
-
-// ─── FOUNDER ─────────────────────────────────────────────────────────────────
-function FounderSection() {
-    const { isMobile } = useBreakpoint()
-    return (
-        <section style={{background:"#111",padding:isMobile?"52px 18px":"100px 80px"}}>
-            <div style={{maxWidth:900,margin:"0 auto",display:"grid",gridTemplateColumns:isMobile?"1fr":"auto 1fr",gap:isMobile?28:64,alignItems:"center"}}>
-                <FadeIn delay={.1}>
-                    <div style={{width:isMobile?100:160,height:isMobile?100:160,borderRadius:"50%",border:"1.5px solid rgba(255,255,255,.10)",overflow:"hidden",position:"relative",flexShrink:0,margin:isMobile?"0 auto":0}}>
-                        <Image src="/Rahul.jpeg" alt="Rahul" fill style={{objectFit:"cover"}} sizes={isMobile?"100px":"160px"}/>
-                    </div>
-                </FadeIn>
-                <FadeIn delay={.2}><div style={{textAlign:isMobile?"center":"left"}}>
-                    <div style={{fontSize:11,fontWeight:600,letterSpacing:"0.14em",color:"rgba(255,255,255,.40)",textTransform:"uppercase" as const,marginBottom:12}}>Founder</div>
-                    <h2 style={{fontSize:isMobile?30:42,fontFamily:"'Inter', sans-serif",fontWeight:700,color:"#fff",letterSpacing:"-0.03em",margin:"0 0 14px",lineHeight:1.1}}>Rahul</h2>
-                    <p style={{fontSize:isMobile?14:16,color:"rgba(255,255,255,.65)",lineHeight:1.7,margin:"0 0 24px"}}>Operator with deep experience building fintech products at national scale across payments, credit, and lending. Credibility comes from outcomes, not credentials.</p>
-                    <motion.a href="https://www.linkedin.com/in/rahulkhanna02/" target="_blank" rel="noopener noreferrer"
-                        style={{display:"inline-flex",alignItems:"center",gap:9,background:"rgba(255,255,255,.08)",color:"rgba(255,255,255,.85)",border:"1px solid rgba(255,255,255,.12)",borderRadius:10,padding:"12px 22px",fontSize:14,fontWeight:500,textDecoration:"none",minHeight:46}}
-                        whileHover={{background:"rgba(255,255,255,.14)",y:-2}}
-                    >
-                        <IC.LinkedIn s={15} c="rgba(255,255,255,.65)"/>View Rahul's LinkedIn
-                    </motion.a>
-                </div></FadeIn>
-            </div>
-        </section>
-    )
-}
 
 // ─── CLOSING CTA ─────────────────────────────────────────────────────────────
 function ClosingCTA() {
@@ -573,9 +543,23 @@ function ClosingCTA() {
 function Footer() {
     const { isMobile } = useBreakpoint()
     return (
-        <footer style={{background:"#0a0a0a",padding:isMobile?"24px 18px":"36px 80px",display:"flex",flexDirection:isMobile?"column":"row",alignItems:"center",justifyContent:"space-between",gap:isMobile?6:0,textAlign:isMobile?"center":"left"}}>
-            <div style={{fontSize:15,fontWeight:700,color:"rgba(255,255,255,.50)",fontFamily:"'Inter', sans-serif"}}>Highfox</div>
+        <footer style={{background:"#0a0a0a",padding:isMobile?"28px 18px":"40px 80px",display:"flex",flexDirection:isMobile?"column":"row",alignItems:"center",justifyContent:"space-between",gap:isMobile?16:0,textAlign:isMobile?"center":"left"}}>
+            <div style={{display:"flex",alignItems:"center",gap:10}}>
+                <Image src="/Highfox Black Background Logo.png" alt="Highfox" width={26} height={26} style={{borderRadius:5,display:"block"}}/>
+                <span style={{fontSize:15,fontWeight:700,color:"rgba(255,255,255,.55)",fontFamily:"'Inter', sans-serif"}}>Highfox</span>
+            </div>
             <div style={{fontSize:12,color:"rgba(255,255,255,.30)",letterSpacing:"0.04em"}}>© 2026 HighFox. One product at a time.</div>
+            <motion.a
+                href="https://www.linkedin.com/in/rahulkhanna02/"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{display:"inline-flex",alignItems:"center",gap:8,background:"rgba(255,255,255,.06)",border:"1px solid rgba(255,255,255,.09)",borderRadius:9,padding:"9px 16px",color:"rgba(255,255,255,.65)",fontSize:13,fontWeight:500,textDecoration:"none",minHeight:38}}
+                whileHover={{background:"rgba(255,255,255,.11)",y:-1}}
+                whileTap={{scale:.97}}
+            >
+                <IFY icon="ri:linkedin-fill" width={15} color="rgba(255,255,255,.65)"/>
+                LinkedIn
+            </motion.a>
         </footer>
     )
 }
@@ -593,8 +577,6 @@ export default function HighfoxSite() {
             <Expertise/>
             <ProductsBuilt/>
             <HowWeWork/>
-            <WhoWeWorkWith/>
-            <FounderSection/>
             <ClosingCTA/>
             <Footer/>
         </div>

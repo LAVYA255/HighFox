@@ -172,7 +172,7 @@ function HeroContent() {
                 letterSpacing:"-0.02em",lineHeight:1.1,color:"#111",
                 margin:0,maxWidth:isPhone?340:700,
             }}>
-                We don't just consult.<br />We build fintech<br />products that scale.
+                We don't consult.<br />We build fintech<br />products that scale.
             </h1>
             <p style={{fontSize:isMobile?14:16,color:"#606060",maxWidth:isPhone?300:500,lineHeight:1.65,margin:0}}>
                 Built by operators behind India's largest fintech products. UPI apps handling 300M+ monthly transactions.
@@ -201,9 +201,9 @@ function HeroContent() {
 function CredibilityStrip() {
     const { isMobile, isPhone } = useBreakpoint()
     const stats=[
-        {cat:"PAYMENTS",  num:"300M+",    desc:"UPI transactions shipped monthly"},
-        {cat:"CREDIT",    num:"100k+",    desc:"Highest monthly credit card issuance"},
-        {cat:"LENDING",   num:"₹100s Cr", desc:"Disbursed monthly on lending platforms"},
+        {cat:"PAYMENTS",  num:"300M+",    desc:"UPI transactions every month"},
+        {cat:"CREDIT CARD",    num:"100k+",    desc:"Monthly credit card issuance"},
+        {cat:"LENDING",   num:"₹100s Cr", desc:"Disbursed every month"},
     ]
     const B = "1px solid rgba(255,255,255,.10)"
     return (
@@ -243,7 +243,7 @@ function CredibilityStrip() {
                     <div style={{fontSize:isPhone?15:isMobile?16:18,fontWeight:600,color:"rgba(255,255,255,.90)",fontFamily:"'Inter', sans-serif",letterSpacing:"-0.02em",lineHeight:1.35}}>product at a time.<br/>No exceptions.</div>
                 </div>
                 <div style={{padding:isPhone?"24px 24px 32px":isMobile?"20px 20px 32px":"44px 56px",display:"flex",alignItems:"center"}}>
-                    <p style={{fontSize:isPhone?14:isMobile?14:16,color:"rgba(255,255,255,.45)",lineHeight:1.75,margin:0,maxWidth:440}}>We don't run parallel engagements. When we're building yours, every person on our team is building yours.</p>
+                    <p style={{fontSize:isPhone?14:isMobile?14:16,color:"rgba(255,255,255,.45)",lineHeight:1.75,margin:0,maxWidth:440}}>We work on one product at a time because category-defining products are built with obsession, not parallel engagements.</p>
                 </div>
             </div>
         </section>
@@ -322,7 +322,7 @@ function Expertise() {
                 <FadeIn><div style={{textAlign:"center",marginBottom:isMobile?44:60}}>
                     <Badge label="Expertise" Icon={IC.Brain}/>
                     <h2 style={{fontSize:isMobile?"clamp(28px,7vw,44px)":"clamp(36px,5vw,58px)",fontFamily:"'Inter', sans-serif",fontWeight:700,letterSpacing:"-0.03em",color:"#111",marginTop:20,marginBottom:12}}>Deep Fintech<br/>Product Expertise</h2>
-                    <p style={{fontSize:isMobile?14:16,color:"#777",maxWidth:480,margin:"0 auto",lineHeight:1.6}}>Four domains. Decades of operator experience. One product at a time.</p>
+                    <p style={{fontSize:isMobile?14:16,color:"#777",maxWidth:760,margin:"0 auto",lineHeight:1.6}}>Four domains. Decades of operator experience. One product at a time.</p>
                 </div></FadeIn>
                 <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"repeat(2,1fr)",gap:isMobile?14:20}}>
                     {dom.map((d,i)=><FadeIn key={i} delay={i*.1}><Card>
@@ -349,7 +349,7 @@ function ProductsBuilt() {
                 <FadeIn><div style={{textAlign:"center",marginBottom:isMobile?44:60}}>
                     <Badge label="Products" Icon={IC.Rocket}/>
                     <h2 style={{fontSize:isMobile?"clamp(28px,7vw,44px)":"clamp(36px,5vw,58px)",fontFamily:"'Inter', sans-serif",fontWeight:700,letterSpacing:"-0.03em",color:"#111",marginTop:20,marginBottom:12}}>Products We Have<br/>Shipped</h2>
-                    <p style={{fontSize:isMobile?14:16,color:"#777",maxWidth:520,margin:"12px auto 0",lineHeight:1.65}}>Not case studies. These are products our team helped build from the inside.</p>
+                    <p style={{fontSize:isMobile?14:16,color:"#777",maxWidth:760,margin:"12px auto 0",lineHeight:1.65}}>Not case studies. These are products our team helped build from the inside.</p>
                 </div></FadeIn>
                 <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:isMobile?14:24,alignItems:"stretch"}}>
                     {prods.map((p,i)=>(
@@ -403,7 +403,7 @@ function HowWeWork() {
                 <FadeIn><div style={{textAlign:"center",marginBottom:isMobile?44:60}}>
                     <Badge label="Process" Icon={IC.Gear}/>
                     <h2 style={{fontSize:isMobile?"clamp(28px,7vw,44px)":"clamp(36px,5vw,58px)",fontFamily:"'Inter', sans-serif",fontWeight:700,letterSpacing:"-0.03em",color:"#fff",marginTop:20,marginBottom:12}}>Our Model<br/>Is Simple</h2>
-                    <p style={{fontSize:isMobile?14:16,color:"rgba(255,255,255,.45)",maxWidth:480,margin:"0 auto",lineHeight:1.6}}>No parallel clients. No diluted attention. No advisory-only engagements.</p>
+                    <p style={{fontSize:isMobile?14:16,color:"rgba(255,255,255,.45)",maxWidth:480,margin:"0 auto",lineHeight:1.6}}>No parallel clients. No diluted attention.</p>
                 </div></FadeIn>
                 <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"repeat(2,1fr)",gap:isMobile?14:20}}>
                     {steps.map((s,i)=><FadeIn key={i} delay={i*.1}>
@@ -432,7 +432,7 @@ function ClosingCTA() {
             <FadeIn>
                 <Badge label="Let's Talk" Icon={IC.Chat}/>
                 <h2 style={{fontSize:isMobile?"clamp(30px,8vw,52px)":"clamp(40px,6vw,72px)",fontFamily:"'Inter', sans-serif",fontWeight:700,letterSpacing:"-0.04em",color:"#fff",margin:"24px auto 16px",lineHeight:1.1,maxWidth:700}}>Building the next big<br/>fintech product?</h2>
-                <p style={{fontSize:isMobile?14:18,color:"rgba(255,255,255,.45)",maxWidth:480,margin:"0 auto 36px",lineHeight:1.65}}>If you believe great products need complete focus, we should talk.</p>
+                <p style={{fontSize:isMobile?14:18,color:"rgba(255,255,255,.45)",maxWidth:760,margin:"0 auto 36px",lineHeight:1.65}}>If you believe great products need complete focus, we should talk.</p>
                 <motion.button
                     onClick={()=>window.open("https://www.linkedin.com/in/rahulkhanna02/","_blank")}
                     style={{display:"inline-flex",alignItems:"center",justifyContent:"center",gap:10,background:"#fff",color:"#111",border:"none",borderRadius:14,padding:isMobile?"15px 28px":"16px 36px",fontSize:isMobile?15:16,fontWeight:500,fontFamily:"inherit",cursor:"pointer",boxShadow:"0 6px 24px rgba(0,0,0,.40)",minHeight:48,width:isMobile?"100%":"auto",maxWidth:isMobile?360:"auto"}}
@@ -449,22 +449,55 @@ function ClosingCTA() {
 function Footer() {
     const { isMobile } = useBreakpoint()
     return (
-        <footer style={{background:"#0a0a0a",padding:isMobile?"28px 18px":"40px 80px",display:"flex",flexDirection:isMobile?"column":"row",alignItems:"center",justifyContent:"space-between",gap:isMobile?16:0,textAlign:isMobile?"center":"left"}}>
-            <div style={{display:"flex",alignItems:"center",gap:10}}>
-                <Image src="/Highfox Black Background Logo.png" alt="Highfox" width={26} height={26} style={{borderRadius:5,display:"block"}}/>
-                <span style={{fontSize:15,fontWeight:700,color:"rgba(255,255,255,.55)",fontFamily:"'Inter', sans-serif"}}>Highfox</span>
+        <footer style={{background:"#0a0a0a",borderTop:"1px solid rgba(255,255,255,.07)"}}>
+            {/* Main footer row */}
+            <div style={{
+                padding:isMobile?"32px 22px 24px":"52px 80px 40px",
+                display:"grid",
+                gridTemplateColumns:isMobile?"1fr":"1fr 1fr 1fr",
+                gap:isMobile?32:0,
+                alignItems:"start",
+            }}>
+                {/* Left — brand */}
+                <div>
+                    <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:14}}>
+                        <Image src="/Highfox Black Background Logo.png" alt="Highfox" width={28} height={28} style={{borderRadius:6,display:"block"}}/>
+                        <span style={{fontSize:16,fontWeight:700,color:"#fff",fontFamily:"'Inter', sans-serif",letterSpacing:"-0.02em"}}>Highfox</span>
+                    </div>
+                    <div style={{fontSize:12,color:"rgba(255,255,255,.35)",lineHeight:1.5,fontWeight:400}}>Highfox Private Limited</div>
+                    <div style={{fontSize:11,color:"rgba(255,255,255,.22)",marginTop:6,lineHeight:1.5,maxWidth:220}}>One product at a time. Always.</div>
+                </div>
+
+                {/* Center — address */}
+                <div style={{textAlign:isMobile?"left":"center"}}>
+                    <div style={{fontSize:10,fontWeight:700,letterSpacing:"0.12em",color:"rgba(255,255,255,.28)",textTransform:"uppercase" as const,marginBottom:12}}>Registered Address</div>
+                    <address style={{fontStyle:"normal",fontSize:12,color:"rgba(255,255,255,.38)",lineHeight:1.75}}>
+                        Bungalow No. 25, Shreesh Co-Operative Housing Society<br/>
+                        Hajuri Darga Road, Thane, Maharashtra 400604
+                    </address>
+                </div>
+
+                {/* Right — social + copyright */}
+                <div style={{display:"flex",flexDirection:"column",alignItems:isMobile?"flex-start":"flex-end",gap:14}}>
+                    <motion.a
+                        href="https://www.linkedin.com/in/rahulkhanna02/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{display:"inline-flex",alignItems:"center",gap:8,background:"rgba(255,255,255,.06)",border:"1px solid rgba(255,255,255,.09)",borderRadius:9,padding:"9px 14px",color:"rgba(255,255,255,.65)",textDecoration:"none",fontSize:13,fontWeight:500}}
+                        whileHover={{background:"rgba(255,255,255,.11)",y:-1}}
+                        whileTap={{scale:.97}}
+                    >
+                        <IFY icon="ri:linkedin-fill" width={16} color="rgba(255,255,255,.65)"/>
+                        LinkedIn
+                    </motion.a>
+                </div>
             </div>
-            <div style={{fontSize:12,color:"rgba(255,255,255,.30)",letterSpacing:"0.04em"}}>© 2026 HighFox. One product at a time.</div>
-            <motion.a
-                href="https://www.linkedin.com/in/rahulkhanna02/"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{display:"inline-flex",alignItems:"center",justifyContent:"center",background:"rgba(255,255,255,.06)",border:"1px solid rgba(255,255,255,.09)",borderRadius:9,padding:"9px 12px",color:"rgba(255,255,255,.65)",textDecoration:"none",minHeight:38}}
-                whileHover={{background:"rgba(255,255,255,.11)",y:-1}}
-                whileTap={{scale:.97}}
-            >
-                <IFY icon="ri:linkedin-fill" width={18} color="rgba(255,255,255,.65)"/>
-            </motion.a>
+
+            {/* Bottom bar */}
+            <div style={{borderTop:"1px solid rgba(255,255,255,.06)",padding:isMobile?"14px 22px":"14px 80px",display:"flex",flexDirection:isMobile?"column":"row",alignItems:"center",justifyContent:"space-between",gap:6}}>
+                <div style={{fontSize:11,color:"rgba(255,255,255,.22)",letterSpacing:"0.03em"}}>© 2026 Highfox Private Limited. All rights reserved.</div>
+                <div style={{fontSize:11,color:"rgba(255,255,255,.18)",letterSpacing:"0.03em"}}>CIN: U74999MH2026PTC000000</div>
+            </div>
         </footer>
     )
 }

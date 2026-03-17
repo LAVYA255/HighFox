@@ -175,7 +175,7 @@ function HeroContent() {
                 We don't consult.<br />We build fintech<br />products that scale.
             </h1>
             <p style={{fontSize:isMobile?14:16,color:"#606060",maxWidth:isPhone?300:500,lineHeight:1.65,margin:0}}>
-                Built by operators behind India's largest fintech products. UPI apps handling 300M+ monthly transactions.
+                The team behind some of India's most scaled fintech products. 500M+ monthly UPI transactions, top-issued credit cards, and 100s of crores in monthly loan disbursals.
             </p>
             <div style={{display:"flex",flexDirection:isMobile?"column":"row",gap:10,width:isMobile?"100%":"auto",maxWidth:isMobile?360:"auto"}}>
                 <motion.button
@@ -201,7 +201,7 @@ function HeroContent() {
 function CredibilityStrip() {
     const { isMobile, isPhone } = useBreakpoint()
     const stats=[
-        {cat:"PAYMENTS",  num:"300M+",    desc:"UPI transactions every month"},
+        {cat:"PAYMENTS",  num:"500M+",    desc:"UPI transactions every month"},
         {cat:"CREDIT CARD",    num:"100k+",    desc:"Monthly credit card issuance"},
         {cat:"LENDING",   num:"₹100s Cr", desc:"Disbursed every month"},
     ]
@@ -496,7 +496,7 @@ function Footer() {
             {/* Bottom bar */}
             <div style={{borderTop:"1px solid rgba(255,255,255,.06)",padding:isMobile?"14px 22px":"14px 80px",display:"flex",flexDirection:isMobile?"column":"row",alignItems:"center",justifyContent:"space-between",gap:6}}>
                 <div style={{fontSize:11,color:"rgba(255,255,255,.22)",letterSpacing:"0.03em"}}>© 2026 Highfox Private Limited. All rights reserved.</div>
-                <div style={{fontSize:11,color:"rgba(255,255,255,.18)",letterSpacing:"0.03em"}}>CIN: U74999MH2026PTC000000</div>
+                {/* <div style={{fontSize:11,color:"rgba(255,255,255,.18)",letterSpacing:"0.03em"}}>CIN: U74999MH2026PTC000000</div> */}
             </div>
         </footer>
     )

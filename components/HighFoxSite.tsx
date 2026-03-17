@@ -240,7 +240,7 @@ function CredibilityStrip() {
                         fontWeight:700,color:"#fff",fontFamily:"'Inter', sans-serif",
                         letterSpacing:"-0.05em",lineHeight:1,flexShrink:0,
                     }}>ONE</div>
-                    <div style={{fontSize:isPhone?15:isMobile?16:18,fontWeight:600,color:"rgba(255,255,255,.90)",fontFamily:"'Inter', sans-serif",letterSpacing:"-0.02em",lineHeight:1.35}}>product at a time.<br/>No exceptions.</div>
+                    <div style={{fontSize:isPhone?15:isMobile?16:18,fontWeight:600,color:"rgba(255,255,255,.90)",fontFamily:"'Inter', sans-serif",letterSpacing:"-0.02em",lineHeight:1.35}}>product at a time.<br/></div>
                 </div>
                 <div style={{padding:isPhone?"24px 24px 32px":isMobile?"20px 20px 32px":"44px 56px",display:"flex",alignItems:"center"}}>
                     <p style={{fontSize:isPhone?14:isMobile?14:16,color:"rgba(255,255,255,.45)",lineHeight:1.75,margin:0,maxWidth:440}}>We work on one product at a time because category-defining products are built with obsession, not parallel engagements.</p>
